@@ -135,7 +135,7 @@ def get_zci(q, web_fallback=True, priority=['answer', 'abstract', 'related.0', '
     if it cannot find anything.'''
 
     ddg = query('\\'+q, **kwargs)
-    response = ''
+    response = {'text':'', 'url':''}
 
     for p in priority:
         ps = p.split('.')
@@ -148,19 +148,15 @@ def get_zci(q, web_fallback=True, priority=['answer', 'abstract', 'related.0', '
             result = result[index] if len(result) > index else None
         if not result: continue
 
-        if result.text: response = result.text
+        if result.text: response['text'] = result.text
         if result.text and hasattr(result,'url') and urls:
-            if result.url: response += ' (%s)' % result.url
+            if result.url: response['url'] = result.url
         if response: break
 
     # if there still isn't anything, try to get the first web result
     if not response and web_fallback:
         if ddg.redirect.url:
-            response = ddg.redirect.url
-
-    # final fallback
-    if not response:
-        response = 'Sorry, no results.'
+            response['url'] = ddg.redirect.url
 
     return response
 
