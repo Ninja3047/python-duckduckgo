@@ -151,7 +151,7 @@ def get_zci(q, web_fallback=True, priority=['answer', 'abstract', 'related.0', '
         if result.text: response['text'] = result.text
         if result.text and hasattr(result,'url') and urls:
             if result.url: response['url'] = result.url
-        if response: break
+        if response['text'] or response['url']: break
 
     # if there still isn't anything, try to get the first web result
     if not response and web_fallback:
